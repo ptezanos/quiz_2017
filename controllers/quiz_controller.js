@@ -201,6 +201,8 @@ exports.randomplay = function (req, res, next) {
  			//req.session.played = JSON.stringify(quizId);
 				score = score;
 
+				req.session.played = [];
+
 				var answer = req.query.answer || '';
 
 
