@@ -1,6 +1,9 @@
 var models = require("../models");
 var Sequelize = require('sequelize');
 
+var score = 0;
+//var played = [];
+
 var paginate = require('../helpers/paginate').paginate;
 
 // Autoload el quiz asociado a :quizId
@@ -174,6 +177,60 @@ exports.play = function (req, res, next) {
 };
 
 
+// GET /quizzes/:quizId/randomplay
+exports.randomplay = function (req, res, next) {
+
+ 	models.Quiz.findAll()
+ 	.then(function(quizzes){
+ 		var played = req.session.played || [];
+
+ 		if(played.length === 0){
+ 			score = 0;
+ 		}
+ 		
+ 		var quizId = 1;
+
+ 		do{
+ 			quizId = Math.ceil(quizzes.length*Math.random());
+ 		} while (played.includes(quizId) && !(played.length === quizzes.length));
+
+
+ 		if(played.length === quizzes.length){
+ 			models.Quiz.findById(quizId)
+ 				.then(function(quiz){
+ 			//req.session.played = JSON.stringify(quizId);
+				score = score;
+
+				var answer = req.query.answer || '';
+
+
+ 				res.render('quizzes/randomnomore', {
+    				score: score,
+    			    quiz: quiz,
+        			answer: answer
+   				 });
+ 			});
+
+ 		} 
+
+ 		models.Quiz.findById(quizId)
+ 		.then(function(quiz){
+ 			req.session.played = played;
+			score = score;
+
+			var answer = req.query.answer || '';
+
+			res.render('quizzes/randomplay', {
+    			score: score,
+    		    quiz: quiz,
+        		answer: answer
+   			 });
+
+ 		});
+ 	});
+};
+
+
 // GET /quizzes/:quizId/check
 exports.check = function (req, res, next) {
 
@@ -182,6 +239,32 @@ exports.check = function (req, res, next) {
     var result = answer.toLowerCase().trim() === req.quiz.answer.toLowerCase().trim();
 
     res.render('quizzes/result', {
+        quiz: req.quiz,
+        result: result,
+        answer: answer
+    });
+};
+
+
+// GET /quizzes/:quizId/randomcheck
+exports.randomcheck = function (req, res, next) {
+
+	score = score;
+
+	req.session.played.push(req.quiz.id);
+
+    var answer = req.query.answer || "";
+
+    var result = answer.toLowerCase().trim() === req.quiz.answer.toLowerCase().trim();
+
+    if (result === true){
+    	score = score + 1;
+    } else{
+    	req.session.played = [];
+    }
+
+    res.render('quizzes/randomcheck', {
+    	score: score,
         quiz: req.quiz,
         result: result,
         answer: answer
