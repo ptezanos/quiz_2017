@@ -262,6 +262,7 @@ exports.randomcheck = function (req, res, next) {
     if (result === true){
     	score = score + 1;
     } else{
+    	score = 0;
     	req.session.played = [];
     }
 
