@@ -288,7 +288,9 @@ exports.randomcheck = function (req, res, next) {
 
 	score = score;
 
-	req.session.played.push(req.quiz.id);
+	var played = req.session.played || [];
+
+	played.push(req.quiz.id);
 
     var answer = req.query.answer || "";
 
