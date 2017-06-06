@@ -9,12 +9,12 @@
         <% var isQuizAuthor = session.user && quizAuthorId && quizAuthorId === session.user.id; %>
         <% var isTipAuthor = session.user && tipAuthorId && tipAuthorId === session.user.id; %>
 
-        <% if (accepted || isAdmin || isQuizAuthor) { %>
+        <% if (accepted || isAdmin || isQuizAuthor || isTipAuthor) { %>
 
             <li>
                 <%= tip.text %>
 
-                <small><span id="autor"><%= quiz.Tips[i].Author ? quiz.Tips[i].Author.username : "Anómino" %></span></small>
+                <span id="autor"><%= quiz.Tips[i].Author ? quiz.Tips[i].Author.username : "Anómino" %></span>
 
                 <% if (!accepted && (isAdmin || isQuizAuthor)) { %>
 
