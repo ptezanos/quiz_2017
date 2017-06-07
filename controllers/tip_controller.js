@@ -60,13 +60,13 @@ exports.create = function (req, res, next) {
             AuthorId: authorId
         });
 
-    //tip.save()
-    tip.save({fields: ["text", "QuizId", "AuthorId"]})
+    tip.save()
+    //tip.save({fields: ["text", "QuizId", "AuthorId"]})
     .then(function (tip) {
         req.flash('success', 'Pista creado con éxito.');
 
-        //res.redirect("back");
-         res.redirect('/quizzes/' + req.quiz.id);
+        res.redirect("back");
+         //res.redirect('/quizzes/' + req.quiz.id);
     })
     .catch(Sequelize.ValidationError, function (error) {
 
